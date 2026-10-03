@@ -22,6 +22,7 @@ function extractProductData() {
     ingredientCompleteness: "complete",
     ingredientCompletenessReason: "",
   };
+  let ingredientSourceText = ""; s
 
   // ─────────────────────────────────────────────
   // Product name
@@ -163,6 +164,7 @@ function extractProductData() {
 
           if (parsed.length >= 1) {
             data.ingredients.push(...parsed);
+            ingredientSourceText = text;
             break;
           }
         }
@@ -355,7 +357,8 @@ function extractProductData() {
 
   const completeness =
     detectIngredientCompleteness(
-      data.ingredients
+      data.ingredients,
+      ingredientSourceText
     );
 
   data.ingredientCompleteness =
@@ -387,7 +390,7 @@ function detectIngredientCompleteness(
   ingredients
 ) {
   const pageText =
-    document.body.innerText || "";
+    sourceText || "";
 
   if (!ingredients.length) {
     return {

@@ -499,7 +499,54 @@ function showExternalPrompt(isPartial = false) {
     }
   });
 
-  document.getElementById("no-external-btn").addEventListener("click", () => {
+    document.getElementById("no-external-btn").addEventListener("click", async () => {
+    if (isPartial) {
+      const noBtn = document.getElementById("no-external-btn");
+      const yesBtn = document.getElementById("yes-external-btn");
+      if (noBtn) {
+        noBtn.disabled = true;
+        noBtn.innerHTML = `${ICONS.loader} Scanning...`;
+      }
+      if (yesBtn) yesBtn.style.display = "none";
+
+      try {
+        const ingredients = currentProduct.ingredients || [];
+        const importRes = await fetch(`${API_URL}/api/import-product`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: currentProduct.name,
+            brand: currentProduct.brand || "Unknown Brand",
+            image: currentProduct.image || "",
+            ingredients: ingredients,
+            packaging: currentProduct.packaging || [],
+            allergens: currentProduct.allergens || [],
+            category: detectCategory(currentProduct),
+          }),
+        });
+
+        if (!importRes.ok) throw new Error("Import failed");
+        const importData = await importRes.json();
+        const saved = importData.product;
+
+        const cat = saved.category.toLowerCase().replace("_", "-");
+        const scanRes = await fetch(`${API_URL}/api/products/${cat}/${saved.slug}/scan?userId=${userId}`);
+        if (!scanRes.ok) throw new Error("Scan failed");
+        const scanData = await scanRes.json();
+
+        renderResults(scanData, ingredients, false);
+      } catch (err) {
+        console.error("Enaj: scan-with-available error", err);
+        resultsEl.innerHTML = `
+          <div class="section-pad center">
+            <div class="result-badge warning">${ICONS.xCircle} Scan Failed</div>
+            <p class="sub-text">Something went wrong. Please try again.</p>
+          </div>
+        `;
+      }
+      return;
+    }
+
     resultsEl.innerHTML = `
       <div class="state">
         <div class="state-icon">${ICONS.bag}</div>
