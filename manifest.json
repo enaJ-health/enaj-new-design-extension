@@ -1,0 +1,82 @@
+{
+  "manifest_version": 3,
+  "name": "Enaj - Your Ingredient Guardian",
+  "version": "1.0.0",
+  "description": "Scan product ingredients agasinst your health conditions and preferences while shopping online.",
+  "permissions": [
+    "storage",
+    "tabs",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://www.walmart.com/*",
+    "https://www.amazon.com/*",
+    "https://www.enajhealth.com/*",
+    "https://enajhealth.com/*",
+    "https://enaj-back-production.up.railway.app/*",
+    "https://world.openbeautyfacts.org/*",
+    "https://www.sephora.com/*",
+    "https://www.ulta.com/*",
+    "https://www.target.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.walmart.com/ip/*"],
+      "js": ["content-walmart.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://www.amazon.com/dp/*",
+        "https://www.amazon.com/*/dp/*",
+        "https://www.amazon.com/*/dp/*/*",
+        "https://www.amazon.com/*"
+      ],
+      "js": ["content-amazon.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://realeactives.com/*"],
+      "js": ["content-realeactives.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://www.enajhealth.com/*",
+        "https://enajhealth.com/*"
+      ],
+      "js": ["content-auth.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["*://*.ulta.com/p/*"],
+      "js": ["content-ulta.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["*://*.sephora.com/product/*"],
+      "js": ["content-sephora.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://www.target.com/p/*"],
+      "js": ["content-target.js"],
+      "run_at": "document_idle"
+    }    
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

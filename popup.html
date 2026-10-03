@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    :root {
+      --primary: #0ABAB5;
+      --primary-dark: #089E9A;
+      --secondary: #A8D5BA;
+      --dark: #1a2e2b;
+      --light: #f8fffe;
+      --card: #ffffff;
+      --muted: #f0f9f6;
+      --muted-fg: #5a7a73;
+      --accent: #e6f7f6;
+      --destructive: #e74c3c;
+      --border: #d9ede9;
+      --warning-bg: #fff8e6;
+      --warning-border: #ffe1a1;
+      --warning-text: #8a6d1a;
+      --danger-bg: #fff5f5;
+      --danger-border: #f6d4d4;
+      --danger-text: #c0392b;
+      --success-bg: #e7f7ee;
+      --success-border: #b8e6cb;
+      --success-text: #1b7a45;
+      --radius: 14px;
+      --radius-sm: 10px;
+      --shadow-sm: 0 1px 2px rgba(26,46,43,0.06);
+      --shadow-md: 0 4px 14px rgba(10,186,181,0.10);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 400px;
+      min-height: 300px;
+      max-height: 600px;
+      overflow-y: auto;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--light);
+      color: var(--dark);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    svg { display: block; }
+    .icon { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+    .icon-sm { width: 15px; height: 15px; }
+
+    /* ── Header ── */
+    .header {
+      background: linear-gradient(135deg, var(--primary) 0%, #4bc6b8 55%, var(--secondary) 100%);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: var(--shadow-md);
+    }
+    .header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: white;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+    .header .tagline {
+      font-size: 11px;
+      color: rgba(255,255,255,0.9);
+      margin-top: 3px;
+    }
+    @keyframes logoFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+    .logo-float { animation: logoFloat 3s ease-in-out infinite; }
+
+    /* ── User bar ── */
+    .user-bar {
+      padding: 9px 16px;
+      background: var(--accent);
+      font-size: 12px;
+      color: var(--muted-fg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .user-bar .name {
+      font-weight: 600;
+      color: var(--dark);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .user-bar .name .dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 0 3px rgba(10,186,181,0.18);
+    }
+    .user-bar button {
+      background: none;
+      border: none;
+      color: var(--muted-fg);
+      font-size: 11px;
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 6px;
+      transition: all 0.15s;
+    }
+    .user-bar button:hover { background: rgba(0,0,0,0.05); color: var(--dark); }
+
+    /* ── Generic state screens (setup / no-product / prompts) ── */
+    .state { padding: 30px 24px; text-align: center; }
+    .state-icon {
+      width: 56px; height: 56px;
+      margin: 0 auto 14px;
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--accent);
+      color: var(--primary);
+    }
+    .state-icon .icon { width: 26px; height: 26px; }
+    .state h2, .state h3 { font-size: 16px; font-weight: 700; color: var(--dark); margin-bottom: 6px; }
+    .state p { font-size: 13px; color: var(--muted-fg); line-height: 1.55; }
+    .state p + p { margin-top: 8px; }
+    .state a { color: var(--primary); font-weight: 600; text-decoration: none; }
+    .state a:hover { text-decoration: underline; }
+    .chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 14px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: var(--muted);
+      border: 1px solid var(--border);
+      font-size: 11px; font-weight: 600; color: var(--muted-fg);
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      width: 100%;
+      padding: 11px 16px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn + .btn { margin-top: 10px; }
+    .btn-primary { background: var(--primary); color: white; box-shadow: var(--shadow-md); }
+    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    .btn-primary:disabled { background: #b0d8d6; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn-secondary { background: var(--card); color: var(--dark); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--muted); }
+    /* ── Fun scan button: floating winged logo above a teal pill ── */
+    .scan-btn-fun {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin: 10px 16px 16px;
+      width: calc(100% - 32px);
+      padding: 0;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    .scan-btn-fun:disabled { opacity: 0.6; cursor: not-allowed; }
+    .scan-pill {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, var(--primary) 0%, #35c7bd 100%);
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      box-shadow: var(--shadow-md);
+      transition: transform 0.15s ease, box-shadow 0.2s ease;
+    }
+    .scan-btn-fun:hover .scan-pill { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(10,186,181,0.30); }
+    .scan-btn-fun:active .scan-pill { transform: scale(0.98); }
+    .scan-logo { overflow: visible; }
+    .scan-logo .wing { transform-box: fill-box; }
+    .scan-logo .wing-left { transform-origin: 100% 60%; }
+    .scan-logo .wing-right { transform-origin: 0% 60%; }
+    @keyframes flapL { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(-24deg); } }
+    @keyframes flapR { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(24deg); } }
+    /* Gentle flap on hover, faster flap on press */
+    .scan-btn-fun:hover .wing-left { animation: flapL 0.7s ease-in-out infinite; }
+    .scan-btn-fun:hover .wing-right { animation: flapR 0.7s ease-in-out infinite; }
+    .scan-btn-fun:active .wing-left { animation: flapL 0.28s ease-in-out infinite; }
+    .scan-btn-fun:active .wing-right { animation: flapR 0.28s ease-in-out infinite; }
+
+    /* ── Product info ── */
+    .product-card {
+      margin: 16px;
+      padding: 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .product-card img {
+      width: 60px; height: 60px;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+    .product-card .info { flex: 1; min-width: 0; }
+    .product-card .brand {
+      font-size: 11px; color: var(--primary); font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .product-card .name {
+      font-size: 14px; font-weight: 600; color: var(--dark);
+      margin-top: 3px; line-height: 1.35;
+    }
+
+    /* ── Loading ── */
+    .loading { padding: 30px 24px; text-align: center; color: var(--muted-fg); font-size: 13px; }
+    .loading .spinner {
+      width: 34px; height: 34px;
+      border: 3px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin-icon { animation: spin 0.8s linear infinite; }
+
+    /* ── Result badge ── */
+    .result-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 13px; font-weight: 700;
+    }
+    .result-badge.safe { background: var(--success-bg); color: var(--success-text); border: 1px solid var(--success-border); }
+    .result-badge.warning { background: var(--danger-bg); color: var(--danger-text); border: 1px solid var(--danger-border); }
+
+    .section-pad { padding: 16px; }
+    .center { text-align: center; }
+    .muted-note { font-size: 11px; color: #9bb3ad; margin-top: 10px; }
+    .sub-text { font-size: 13px; color: var(--muted-fg); margin-top: 8px; line-height: 1.5; }
+
+    /* ── External-source banner ── */
+    .banner {
+      margin: 14px 16px 4px;
+      padding: 11px 14px;
+      background: var(--warning-bg);
+      border: 1px solid var(--warning-border);
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      color: var(--warning-text);
+      line-height: 1.5;
+      display: flex;
+      gap: 9px;
+    }
+    .banner .icon { color: var(--warning-text); margin-top: 1px; }
+    .banner strong { font-weight: 700; }
+
+    /* ── Flags ── */
+    .flags-wrap { padding: 14px 16px 4px; }
+    .flag-item {
+      background: var(--card);
+      border: 1px solid var(--danger-border);
+      border-left: 3px solid var(--destructive);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      box-shadow: var(--shadow-sm);
+    }
+    .flag-item .flag-head {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 700; color: var(--destructive);
+      text-transform: uppercase; letter-spacing: 0.4px;
+      margin-bottom: 6px;
+    }
+    .flag-item .ing-name { font-size: 13px; font-weight: 700; color: var(--dark); }
+    .flag-item .reason { font-size: 12px; color: var(--muted-fg); margin-top: 3px; line-height: 1.45; }
+    .flag-item .info { font-size: 11px; color: var(--muted-fg); margin-top: 5px; line-height: 1.45; }
+    .flag-item .info a { color: var(--primary); font-weight: 600; text-decoration: none; white-space: nowrap; }
+    .flag-item .info a:hover { text-decoration: underline; }
+    .flag-item .reason strong, .flag-item .info strong {
+      color:#056b67;
+      font-weight: 700;
+      background: rgba(10,186,181,0.12);
+      padding: 1px 5px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    /* ── Ingredient list ── */
+    .ing-list { padding: 14px 16px; border-top: 1px solid var(--border); }
+    .ing-list h3 {
+      font-size: 11px; font-weight: 700; color: var(--muted-fg);
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 9px;
+    }
+    .ing-tag {
+      display: inline-block;
+      padding: 4px 9px; margin: 0 3px 3px 0;
+      border-radius: 7px;
+      font-size: 11px;
+      background: var(--muted);
+      color: var(--muted-fg);
+      border: 1px solid var(--border);
+    }
+    .ing-tag.flagged {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+      border-color: var(--danger-border);
+      font-weight: 700;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      padding: 11px 16px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 10px;
+      color: #9bb3ad;
+    }
+    .footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
+    .footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <!-- ── header ── -->
+  <div class="header">
+    <div>
+      <h1>enaJ</h1>
+      <div class="tagline">Your ingredient guardian angel</div>
+    </div>
+    <svg width="64" height="44" viewBox="0 0 96 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="logo-float" aria-hidden="true">
+      <path d="M36 30C32 26 22 14 10 6C7 4 3 5 4 8C6 14 14 24 28 32C32 34 35 33 36 31Z" fill="url(#wg)" opacity="0.6"/>
+      <path d="M36 29C33 24 24 14 14 8C11 6 8 7 9 10C11 16 18 25 30 32C33 33 35 32 36 30Z" fill="url(#wg)" opacity="0.7"/>
+      <path d="M37 28C34 22 27 14 18 10C15 9 12 10 13 13C15 18 22 26 32 31C35 32 36 31 37 29Z" fill="url(#wg)" opacity="0.85"/>
+      <path d="M37 27C35 22 30 16 23 13C20 12 18 13 19 15C20 19 26 26 33 30C35 31 37 30 37 28Z" fill="url(#wg)" opacity="0.9"/>
+      <path d="M37 26C36 22 33 18 28 16C26 15 24 16 25 18C26 21 30 26 34 29C36 30 37 28 37 27Z" fill="url(#wh)" opacity="0.5"/>
+      <path d="M36 29C33 23 25 14 16 9C14 8 12 9 13 11C14 16 20 25 31 31C34 32 36 31 36 30Z" fill="url(#wh)" opacity="0.3"/>
+      <path d="M60 30C64 26 74 14 86 6C89 4 93 5 92 8C90 14 82 24 68 32C64 34 61 33 60 31Z" fill="url(#wg)" opacity="0.6"/>
+      <path d="M60 29C63 24 72 14 82 8C85 6 88 7 87 10C85 16 78 25 66 32C63 33 61 32 60 30Z" fill="url(#wg)" opacity="0.7"/>
+      <path d="M59 28C62 22 69 14 78 10C81 9 84 10 83 13C81 18 74 26 64 31C61 32 60 31 59 29Z" fill="url(#wg)" opacity="0.85"/>
+      <path d="M59 27C61 22 66 16 73 13C76 12 78 13 77 15C76 19 70 26 63 30C61 31 59 30 59 28Z" fill="url(#wg)" opacity="0.9"/>
+      <path d="M59 26C60 22 63 18 68 16C70 15 72 16 71 18C70 21 66 26 62 29C60 30 59 28 59 27Z" fill="url(#wh)" opacity="0.5"/>
+      <path d="M60 29C63 23 71 14 80 9C82 8 84 9 83 11C82 16 76 25 65 31C62 32 60 31 60 30Z" fill="url(#wh)" opacity="0.3"/>
+      <path d="M48 10L36 16V30C36 40 48 52 48 52C48 52 60 40 60 30V16L48 10Z" fill="url(#sg)" stroke="url(#ss)" stroke-width="1.5"/>
+      <path d="M43 31L46 35L54 26" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <defs>
+        <linearGradient id="wg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0ABAB5"/><stop offset="100%" stop-color="#A8D5BA"/></linearGradient>
+        <linearGradient id="wh" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#B8EBD6"/><stop offset="100%" stop-color="#D4F5E9"/></linearGradient>
+        <linearGradient id="sg" x1="48" y1="10" x2="48" y2="52"><stop offset="0%" stop-color="#0ABAB5"/><stop offset="100%" stop-color="#78C9A0"/></linearGradient>
+        <linearGradient id="ss" x1="48" y1="10" x2="48" y2="52"><stop offset="0%" stop-color="#0ABAB5"/><stop offset="100%" stop-color="#A8D5BA"/></linearGradient>
+      </defs>
+    </svg>
+  </div>
+
+  <!-- ── User bar (connected) ── -->
+  <div id="user-bar" class="user-bar" style="display:none;">
+    <span id="user-name" class="name"><span class="dot"></span>Connected</span>
+    <button id="disconnect-btn">Disconnect</button>
+  </div>
+
+  <!-- ── Setup screen ── -->
+  <div id="setup-screen" class="state" style="display:none;">
+    <div class="state-icon">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V5l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
+    </div>
+    <h2>Welcome to enaJ</h2>
+    <p>Connect your profile at <a href="https://www.enajhealth.com" target="_blank">enajhealth.com</a>.</p>
+    <p>Then click the enaJ icon on any product page to scan its ingredients while you shop.</p>
+  </div>
+
+  <!-- ── No product ── -->
+  <div id="no-product" class="state" style="display:none;">
+    <div class="state-icon">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+    </div>
+    <h3>Browse a product</h3>
+    <p>Open a product page and click the enaJ icon to scan its ingredients.</p>
+    <span class="chip">
+      <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
+      Amazon · Sephora · Ulta · Walmart · Target
+    </span>
+  </div>
+
+  <!-- ── Product detected ── -->
+  <div id="product-section" style="display:none;">
+    <div class="product-card">
+      <img id="product-img" src="" alt="" />
+      <div class="info">
+        <div class="brand" id="product-brand"></div>
+        <div class="name" id="product-name"></div>
+      </div>
+    </div>
+    <button class="scan-btn-fun" id="scan-btn">
+      <svg class="scan-logo" width="72" height="48" viewBox="0 0 96 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g class="wing wing-left">
+          <path d="M36 30C32 26 22 14 10 6C7 4 3 5 4 8C6 14 14 24 28 32C32 34 35 33 36 31Z" fill="url(#bwg)" opacity="0.55"/>
+          <path d="M37 28C34 22 27 14 18 10C15 9 12 10 13 13C15 18 22 26 32 31C35 32 36 31 37 29Z" fill="url(#bwg)" opacity="0.8"/>
+          <path d="M37 27C35 22 30 16 23 13C20 12 18 13 19 15C20 19 26 26 33 30C35 31 37 30 37 28Z" fill="url(#bwg)"/>
+        </g>
+        <g class="wing wing-right">
+          <path d="M60 30C64 26 74 14 86 6C89 4 93 5 92 8C90 14 82 24 68 32C64 34 61 33 60 31Z" fill="url(#bwg)" opacity="0.55"/>
+          <path d="M59 28C62 22 69 14 78 10C81 9 84 10 83 13C81 18 74 26 64 31C61 32 60 31 59 29Z" fill="url(#bwg)" opacity="0.8"/>
+          <path d="M59 27C61 22 66 16 73 13C76 12 78 13 77 15C76 19 70 26 63 30C61 31 59 30 59 28Z" fill="url(#bwg)"/>
+        </g>
+        <path d="M48 10L36 16V30C36 40 48 52 48 52C48 52 60 40 60 30V16L48 10Z" fill="url(#bsg)"/>
+        <path d="M43 31L46 35L54 26" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <defs>
+          <linearGradient id="bwg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0ABAB5"/><stop offset="100%" stop-color="#7FD8CE"/></linearGradient>
+          <linearGradient id="bsg" x1="48" y1="10" x2="48" y2="52"><stop offset="0%" stop-color="#0ABAB5"/><stop offset="100%" stop-color="#35C7BD"/></linearGradient>
+        </defs>
+      </svg>
+      <span class="scan-pill" id="scan-label">Scan with enaJ</span>
+    </button>
+  </div>
+
+  <!-- ── Loading ── -->
+  <div id="loading" style="display:none;">
+    <div class="loading">
+      <div class="spinner"></div>
+      <div>Analyzing ingredients...</div>
+    </div>
+  </div>
+
+  <!-- ── Scan results ── -->
+  <div id="results" style="display:none;"></div>
+
+  <!-- ── Footer ── -->
+  <div class="footer">
+    Powered by <a href="https://www.enajhealth.com" target="_blank">enaJ</a> · Your health, your choice
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
